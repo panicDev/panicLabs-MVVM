@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="id.panicLabs.core">
+
+    <application android:name=".CoreApp">
+
+    </application>
+
+</manifest>

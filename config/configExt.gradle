@@ -1,0 +1,177 @@
+/**
+ * This gradle file contains the ext variables with the libraries versions and the project configuration
+ */
+def Group(Closure closure) {
+    closure.delegate = dependencies
+    return closure
+}
+
+ext.versions = [
+    //region Android versions
+    compileSdkVersion : 27,
+    applicationId : 'id.panicLabs.wancak',
+    minSdkVersion : 21,
+    targetSdkVersion : 27,
+    versionCode : 1,
+    versionName : '1.0',
+    testInstrumentationRunner : 'android.support.test.runner.AndroidJUnitRunner',
+    multiDexEnabled : true,
+    //endregion
+]
+
+ext.libraries = [
+    //region Dependency versions
+    daggerVersion : '2.15',
+    roomVersion : "1.1.1",
+    pagingVersion : "1.0.1",
+    lifecycleVersion : "1.1.1",
+    googleSupportVersion : '27.1.1',
+    glideVersion : "4.7.1",
+    rxJavaVersion : "2.1.9",
+    rxKotlinVersion : "2.2.0",
+    rxAndroidVersion : "2.0.1",
+    retrofitVersion : "2.4.0"
+    //endregion
+]
+
+ext {
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // CORE                                                                                       //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    core = Group {
+        implementation fileTree(include: ['*.jar'], dir: 'libs')
+        //region MultiDex dependency
+        implementation 'com.android.support:multidex:1.0.3'
+        //endregion
+
+
+        implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+        //region Glide dependencies
+        implementation "com.github.bumptech.glide:glide:$libraries.glideVersion"
+        kapt "com.github.bumptech.glide:compiler:$libraries.glideVersion"
+        //endregion
+
+        //region Dagger2 dependencies
+        implementation "com.google.dagger:dagger:$libraries.daggerVersion"
+        implementation "com.google.dagger:dagger-android:$libraries.daggerVersion"
+        implementation "com.google.dagger:dagger-android-support:$libraries.daggerVersion"
+        kapt "com.google.dagger:dagger-compiler:$libraries.daggerVersion"
+        kapt "com.google.dagger:dagger-android-processor:$libraries.daggerVersion"
+        //endregion
+
+        //region Support dependencies
+        implementation "com.android.support:recyclerview-v7:$libraries.googleSupportVersion"
+        implementation "com.android.support:appcompat-v7:$libraries.googleSupportVersion"
+        implementation "com.android.support:support-v13:$libraries.googleSupportVersion"
+        implementation "com.android.support:design:$libraries.googleSupportVersion"
+        implementation "com.android.support:cardview-v7:$libraries.googleSupportVersion"
+        implementation 'com.android.support.constraint:constraint-layout:1.1.1'
+        //endregion
+
+        //region DataBinding/Lifecycle dependencies
+        implementation "android.arch.core:runtime:$libraries.lifecycleVersion"
+        implementation "android.arch.lifecycle:extensions:$libraries.lifecycleVersion"
+        api "android.arch.lifecycle:viewmodel:$libraries.lifecycleVersion"
+        implementation "android.arch.lifecycle:livedata:$libraries.lifecycleVersion"
+        implementation "android.arch.lifecycle:livedata-core:$libraries.lifecycleVersion"
+        implementation "android.arch.lifecycle:reactivestreams:$libraries.lifecycleVersion"
+        kapt "android.arch.lifecycle:compiler:$libraries.lifecycleVersion"
+        kapt "com.android.databinding:compiler:$android_plugin_version"
+        //endregion
+
+        //region Room
+        implementation "android.arch.persistence.room:runtime:$libraries.roomVersion"
+        implementation "android.arch.persistence.room:compiler:$libraries.roomVersion"
+        implementation "android.arch.persistence.room:rxjava2:$libraries.roomVersion"
+        implementation "android.arch.persistence.room:testing:$libraries.roomVersion"
+        annotationProcessor "android.arch.persistence.room:compiler:$libraries.roomVersion"
+        kapt "android.arch.persistence.room:compiler:$libraries.roomVersion"
+        //endregion
+
+
+        //region Pagination
+        implementation "android.arch.paging:runtime:$libraries.pagingVersion"
+        implementation "android.arch.paging:rxjava2:$libraries.pagingVersion"
+        //endregion
+
+
+        //region Retrofit2 dependencies
+        implementation "com.squareup.retrofit2:retrofit:$libraries.retrofitVersion"
+        implementation "com.squareup.retrofit2:converter-gson:$libraries.retrofitVersion"
+        implementation "com.squareup.retrofit2:adapter-rxjava2:$libraries.retrofitVersion"
+        //endregion
+
+        //Rx dependencies
+        implementation "io.reactivex.rxjava2:rxkotlin:$libraries.rxKotlinVersion"
+        implementation "io.reactivex.rxjava2:rxjava:$libraries.rxJavaVersion"
+        implementation "io.reactivex.rxjava2:rxandroid:$libraries.rxAndroidVersion"
+        //endregion
+
+        //region Network tools dependencies
+        implementation 'com.github.mrmike:ok2curl:0.4.5'
+        //endregion
+
+        //region DB tools dependencies
+        implementation 'com.facebook.stetho:stetho:1.5.0'
+
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // VIEW                                                                                       //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    view = Group {
+
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // TESTING                                                                                    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    testing = Group {
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        //                                 ANDROID UI TESTING                                         //
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        androidTestImplementation ("junit:junit:4.12") {
+            exclude group: 'org.hamcrest'
+        }
+        androidTestImplementation 'com.android.support.test:runner:1.0.2'
+        androidTestImplementation ('com.android.support.test.espresso:espresso-core:3.0.2', {
+            exclude group: 'com.android.support', module: 'support-annotations'
+        })
+        androidTestImplementation 'com.android.support.test:rules:1.0.1'
+        androidTestImplementation "org.mockito:mockito-android:2.18.3"
+        androidTestImplementation ("com.nhaarman:mockito-kotlin-kt1.1:1.5.0") {
+            exclude group: 'org.jetbrains.kotlin'
+            exclude group: 'org.mockito'
+        }
+
+        androidTestImplementation "com.google.dagger:dagger:$libraries.daggerVersion"
+        kaptAndroidTest "com.google.dagger:dagger-compiler:$libraries.daggerVersion"
+
+        androidTestImplementation('com.schibsted.spain:barista:2.5.0') {
+            exclude group: 'com.android.support'
+            exclude group: 'org.jetbrains.kotlin' // Only if you already use Kotlin in your project
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        //                                 UNIT TESTING                                               //
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        testImplementation("junit:junit:4.12") {
+            exclude group: 'org.hamcrest'
+        }
+        testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+        testImplementation 'org.mockito:mockito-core:2.18.3'
+        testImplementation 'org.assertj:assertj-core:3.8.0'
+        testImplementation ("com.nhaarman:mockito-kotlin-kt1.1:1.5.0") {
+            exclude group: 'org.jetbrains.kotlin'
+            exclude group: 'org.mockito'
+        }
+        //OkHttp Mock
+        testImplementation 'com.squareup.okhttp3:mockwebserver:3.10.0'
+        //Dagger2
+        testImplementation "com.google.dagger:dagger-compiler:$libraries.daggerVersion"
+    }
+}

@@ -1,0 +1,9 @@
+/**
+ * This gradle file contains the very basic dependencies for each module
+ */
+
+dependencies {
+    apply from: '../config/configExt.gradle'
+    core()
+    testing()
+}

@@ -1,0 +1,81 @@
+/**
+ * This gradle file contains the basic project configuration that all modules should use
+ */
+apply from: '../config/configExt.gradle'
+
+android {
+    compileSdkVersion versions.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion versions.minSdkVersion
+        targetSdkVersion versions.targetSdkVersion
+        versionCode versions.versionCode
+        versionName versions.versionName
+        testInstrumentationRunner versions.testInstrumentationRunner
+        multiDexEnabled versions.multiDexEnabled
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+    }
+
+    /**
+     * We don't want to store the UT results anywhere, this is going to speed up the build process
+     */
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+            exceptionFormat 'full'
+        }
+        reports.html.enabled = false
+        reports.junitXml.enabled = false
+        maxParallelForks = 7 //Speeds up yhe UT by running'em into 7 different forks
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries = true
+    }
+
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+
+    /**
+     * This two options are basically disabling the lint validation during building time, we may want
+     * to enable them from time to time, to check on the lint errors
+     */
+    lintOptions {
+        tasks.lint.enabled = false
+        abortOnError false
+    }
+
+    /**
+     * Speeds up the building time
+     */
+    kapt {
+        useBuildCache = true
+    }
+
+    compileOptions {
+        incremental = true //Enables incremental builds so we don't need to rebuild unchanged modules
+    }
+
+    dataBinding.enabled = true
+
+    configurations.all {
+        //Some of the libraries that we are using are using a different run gradlew <MODULE>:dependencies to check'em
+        resolutionStrategy.force "com.android.support:appcompat-v7:$libraries.googleSupportVersion"
+        resolutionStrategy.force "com.android.support:support-core-utils:$libraries.googleSupportVersion"
+        resolutionStrategy.force "android.arch.lifecycle:runtime:$libraries.lifecycleVersion"
+        resolutionStrategy.force "android.arch.lifecycle:livedata-core:$libraries.lifecycleVersion"
+        resolutionStrategy.force "android.arch.lifecycle:viewmodel:$libraries.lifecycleVersion"
+    }
+
+
+//    androidExtensions {
+//        experimental = true
+//    }
+}
