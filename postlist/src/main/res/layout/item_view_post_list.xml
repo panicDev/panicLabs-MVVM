@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="id.panicLabs.wancak.postlist.ui.PostListItemViewModel"/>
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:layout_margin="4dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:contentDescription="Cover image"
+                android:id="@+id/postListItemImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                app:cover_image="@{viewModel.postList}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorBlackOverlay"
+                android:padding="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/postListItemTitle"
+                    style="@style/TextAppearance.AppCompat.Medium.Inverse"
+                    android:layout_width="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginBottom="8dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    tools:text="Post title Post title Post title Post title Post title Post title" />
+
+                <TextView
+                    android:id="@+id/postListItemLikes"
+                    style="@style/TextAppearance.AppCompat.Small.Inverse"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/postListItemTitle"
+                    tools:text="23" />
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Small.Inverse"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toEndOf="@id/postListItemLikes"
+                    app:layout_constraintTop_toBottomOf="@id/postListItemTitle"
+                    tools:text="45" />
+
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+</layout>
