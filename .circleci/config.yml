@@ -9,21 +9,39 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}--{{ checksum "core/build.gradle" }}--{{ checksum "postlist/build.gradle" }}
       - run:
           name: Download Dependencies
           command: |
                   sudo chmod +x gradlew
                   ./gradlew androidDependencies
+
+      - run:
+          name: Licenses
+          command: |
+            yes | sdkmanager --licenses || true
+
+      - run:
+          name: Jacoco
+          command: |
+                  sudo chmod +x gradlew
+                  ./gradlew jacocoTestReport
+
+      - run:
+          name: Coveralls
+          command: |
+                   sudo chmod +x gradlew
+                   ./gradlew coveralls
+
+      - store_artifacts:
+          path: app/build/reports/jacoco/jacocoTestReport
+          destination: coverage-report
+
+      - store_artifacts:
+          path: app/build/reports/tests/testDebugUnitTest
+          destination: local-test-report
+
       - save_cache:
           paths:
             - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Run Tests
-          command: ./gradlew lint test
-      - store_artifacts:
-          path: app/build/reports
-          destination: reports
-      - store_test_results:
-          path: app/build/test-results
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}--{{ checksum "core/build.gradle" }}--{{ checksum "postlist/build.gradle" }}

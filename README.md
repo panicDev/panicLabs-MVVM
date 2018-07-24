@@ -1,8 +1,9 @@
 <h1 align="center">PanicLabs-MVVM</h1>
 <p align="center">A boilerplate-less Kotlin MVVM with Multi Module Feature</p>
-[![CircleCI](https://circleci.com/gh/panicDev/panicLabs-MVVM/tree/master.svg?style=svg)](https://circleci.com/gh/panicDev/panicLabs-MVVM/tree/master)
-[![Coverage Status](https://coveralls.io/repos/github/panicDev/panicLabs-MVVM/badge.svg)](https://coveralls.io/github/panicDev/panicLabs-MVVM)
-
+<p align="center">
+  <a href="https://circleci.com/gh/panicDev/panicLabs-MVVM/tree/master"><img src="https://circleci.com/gh/panicDev/panicLabs-MVVM/tree/master.svg?style=svg" alt="Build Status"></a>
+  <a href="https://coveralls.io/github/panicDev/panicLabs-MVVM"><img src="https://coveralls.io/repos/github/panicDev/panicLabs-MVVM/badge.svg" alt="Coverage"></a>
+</p>
 
 
 ## Description

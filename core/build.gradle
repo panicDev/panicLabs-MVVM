@@ -17,8 +17,4 @@ dependencies {
     apply from: '../config/configDependencies.gradle'
 }
 
-
-//If Coveralls can't find jacoco test report then set correct address manually
-coveralls {
-    jacocoReportPath = "${buildDir}/reports/jacocoTestReport/jacocoTestReport.xml"
-}
+apply from: '../config/coveralls.gradle'
