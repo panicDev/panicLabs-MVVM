@@ -27,13 +27,17 @@ class CoreRepository(private val coreApi: CoreApi, val appDb: AppDb) {
 
     val networkStatus =  MutableLiveData<String>()
 
-    fun fetchSection(section: String): LiveData<List<SectionResponse.Post>> {
-        return LiveDataReactiveStreams.fromPublisher { getSection(section) }
+    fun fetchSection(section: String): LiveData<SectionResponse> {
+        return LiveDataReactiveStreams.fromPublisher {
+            coreApi.getSection(section)
+        }
     }
 
-    private fun getSection(section: String): Single<SectionResponse> {
+
+    fun getSection(section: String): Single<SectionResponse> {
         return coreApi.getSection(section)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+
     }
 }

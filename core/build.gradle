@@ -4,6 +4,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply from: '../config/configAndroid.gradle'
 apply from: '../config/configProperties.gradle'
+apply from: rootProject.file('jacoco.gradle')
+apply plugin: "com.github.kt3k.coveralls"
+
 
 repositories {
     jcenter()
@@ -12,4 +15,10 @@ repositories {
 
 dependencies {
     apply from: '../config/configDependencies.gradle'
+}
+
+
+//If Coveralls can't find jacoco test report then set correct address manually
+coveralls {
+    jacocoReportPath = "${buildDir}/reports/jacocoTestReport/jacocoTestReport.xml"
 }

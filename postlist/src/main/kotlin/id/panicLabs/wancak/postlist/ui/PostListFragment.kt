@@ -15,6 +15,7 @@ import id.panicLabs.wancak.postlist.di.DaggerPostListComponent
 import id.panicLabs.core.CoreApp
 import id.panicLabs.wancak.postlist.databinding.FragmentPostListBinding
 import id.panicLabs.wancak.postlist.R
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_post_list.*
 
 /**
@@ -60,12 +61,29 @@ class PostListFragment: Fragment() {
         postListRecyclerView.adapter = postListAdapter
 
 
-        viewModel.networkEvents.observe(this, Observer { networkEvent ->
-            Log.d("SARASA", networkEvent)
-        })
+//        viewModel.networkEvents.observe(this, Observer { networkEvent ->
+//            Log.d("SARASA", networkEvent)
+//        })
+
+//        viewModel.repository.getSection("lol")
+//                .subscribeBy(
+//                        onError = {
+//                            println("PostListFragment.onError : ${it.message}")
+//                        },
+//                        onSuccess = {
+//                            println("PostListFragment.onSuccess : ${it.toString()}")
+//                        }
+//                )
+//        viewModel.repository.fetchSection("lol")
+//                .observe(this, Observer {
+//                    println("PostListFragment.observe : ${it.toString()}")
+//                })
 
         viewModel.fetchSection.observe(this, Observer { post ->
-            post?.let { postListAdapter.listPosts = it }
+            println("PostListFragment.observe:  ${post?.toString()}")
+            post?.let {
+                postListAdapter.listPosts = it.posts
+            }
         })
     }
 }

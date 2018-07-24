@@ -54,17 +54,17 @@ class NetworkModule {
         }
     }
 
-    @Provides
-    @Named("authInterceptor")
-    protected fun providesAuthInterceptor(): Interceptor {
-        return Interceptor { chain ->
-            var request = chain.request()
-            request = request.newBuilder()
-                    .header("Authorization", "Bearer 612835321128730")
-                    .build()
-            chain.proceed(request)
-        }
-    }
+//    @Provides
+//    @Named("authInterceptor")
+//    protected fun providesAuthInterceptor(): Interceptor {
+//        return Interceptor { chain ->
+//            var request = chain.request()
+//            request = request.newBuilder()
+//                    .header("Authorization", "Bearer 612835321128730")
+//                    .build()
+//            chain.proceed(request)
+//        }
+//    }
 
     @Provides
     @Named("cacheInterceptor")
@@ -81,14 +81,14 @@ class NetworkModule {
     @Provides
     @Singleton
     protected fun provideOkHttpClient(cache: okhttp3.Cache,
-                                      @Named("authInterceptor") authInterceptor: Interceptor,
+//                                      @Named("authInterceptor") authInterceptor: Interceptor,
                                       @Named("curlInterceptor") curlInterceptor: Interceptor,
                                       @Named("cacheInterceptor") cacheInterceptor: Interceptor): OkHttpClient {
         val builder = OkHttpClient.Builder()
         if (ENABLE_OKHTTP_CACHE) {
             builder.cache(cache)
         }
-        builder.addInterceptor(authInterceptor)
+//        builder.addInterceptor(authInterceptor)
         builder.addInterceptor(curlInterceptor)
         builder.connectTimeout(30, TimeUnit.SECONDS).readTimeout(30, TimeUnit.SECONDS)
         return builder.build()
