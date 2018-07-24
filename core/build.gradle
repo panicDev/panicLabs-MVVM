@@ -17,4 +17,4 @@ dependencies {
     apply from: '../config/configDependencies.gradle'
 }
 
-apply from: '../config/coveralls.gradle'
+//apply from: '../config/coveralls.gradle'
