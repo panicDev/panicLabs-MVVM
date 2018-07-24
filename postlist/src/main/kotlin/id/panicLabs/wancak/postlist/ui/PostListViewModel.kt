@@ -13,13 +13,13 @@ import javax.inject.Inject
  */
 class PostListViewModel @Inject constructor(var repository: CoreRepository) : ViewModel() {
 
-    val fetchSection: LiveData<List<SectionResponse.Post>> =
+    val fetchSection: LiveData<SectionResponse> =
             repository.fetchSection("lol")
 
     var uiEvents = MutableLiveData<String>()
     var networkEvents = repository.networkStatus
 
 
-    fun onstarst() {
+    fun onstars() {
     }
 }
