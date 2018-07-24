@@ -31,7 +31,7 @@ jobs:
           name: Coveralls
           command: |
                    sudo chmod +x gradlew
-                   ./gradlew coveralls
+                   CI=true CIRCLECI=true COVERALLS_REPO_TOKEN=UDTu5JAyYmL642xMUgrRxMD2L0bNRasA1NdjM ./gradlew coveralls
 
       - store_artifacts:
           path: app/build/reports/jacoco/jacocoTestReport
