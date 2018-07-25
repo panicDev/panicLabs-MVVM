@@ -2,7 +2,8 @@ package id.panicLabs.core.retrofit.responses
 
 data class SectionResponse(
         val page: Page = Page(),
-        val posts: List<Post> = listOf()
+        val posts: List<Post> = listOf(),
+        var error: String = ""
 ) {
     data class Post(
             val id: String = "",

@@ -20,5 +20,8 @@ ext {
 android {
     defaultConfig {
         buildConfigField "String", "BASE_URL", "\"${config.commonProperties.ENDPOINT}\""
+        buildConfigField "String", "BASE_IMG_URL", "\"${config.commonProperties.IMGURL}\""
+        buildConfigField "String", "BASE_IMG_UNSAVE", "\"${config.commonProperties.UNSAVE}\""
+        buildConfigField "String", "BASE_IS_UNSAVE", "\"${config.commonProperties.IS_UNSAVE}\""
     }
 }

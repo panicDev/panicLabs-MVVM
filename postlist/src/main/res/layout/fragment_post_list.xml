@@ -9,7 +9,7 @@
             type="id.panicLabs.wancak.postlist.ui.PostListViewModel"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="4dp"
@@ -21,6 +21,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-    </android.support.constraint.ConstraintLayout>
+        <ProgressBar
+            android:id="@+id/postListProgress"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
 
 </layout>

@@ -1,13 +1,16 @@
 package id.panicLabs.wancak.postlist.ui
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.ViewModel
 import android.databinding.BindingAdapter
 import android.databinding.ObservableField
-import android.support.constraint.ConstraintLayout
-import android.support.constraint.Guideline
 import android.widget.ImageView
+import android.widget.TextView
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.Target
 import id.panicLabs.core.di.module.GlideApp
 import id.panicLabs.core.retrofit.responses.SectionResponse
+import id.panicLabs.core.utils.imgUrl
 
 /**
  * @author panicLabs
@@ -22,13 +25,27 @@ class PostListItemViewModel() : ViewModel(){
     val postList = ObservableField<SectionResponse.Post>()
 
     companion object {
-        //TODO https://stackoverflow.com/questions/44845121/constraintlayout-with-databinding
         @JvmStatic @BindingAdapter(value = "app:cover_image", requireAll = true)
         fun bindImageUrl(imageView: ImageView, post: SectionResponse.Post?) {
-            post?.let { imgurPost ->
+            val screenWidth = imageView.context.resources.displayMetrics.widthPixels
+            post?.let {
+
+                println("PostListItemViewModel.bindImageUrl ${it.img.imgUrl()}")
                 val glideBuilder = GlideApp.with(imageView.context)
-                        .load(imgurPost.img)
+                        .load(it.img.imgUrl())
+                        .override(screenWidth,Target.SIZE_ORIGINAL)
+                        .fitCenter()
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+
                 glideBuilder.into(imageView)
+            }
+        }
+
+        @SuppressLint("SetTextI18n")
+        @JvmStatic @BindingAdapter(value = "app:text_vote", requireAll = true)
+        fun bindTextVote(textView: TextView, post: SectionResponse.Post?) {
+            post?.let {
+                textView.text = "${it.votes} funs"
             }
         }
     }
