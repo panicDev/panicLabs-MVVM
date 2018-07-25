@@ -3,20 +3,25 @@ package id.panicLabs.wancak.postlist.ui
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.StaggeredGridLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import id.panicLabs.core.di.module.MyViewModelFactory
+import id.panicLabs.core.state.Status
 import javax.inject.Inject
 import id.panicLabs.wancak.postlist.di.DaggerPostListComponent
 import id.panicLabs.core.CoreApp
+import id.panicLabs.core.ui.PRecyclerView
+import id.panicLabs.core.utils.gone
+import id.panicLabs.core.utils.show
 import id.panicLabs.wancak.postlist.databinding.FragmentPostListBinding
 import id.panicLabs.wancak.postlist.R
-import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_post_list.*
+import org.jetbrains.anko.toast
 
 /**
  * @author panicLabs
@@ -60,30 +65,22 @@ class PostListFragment: Fragment() {
 
         postListRecyclerView.adapter = postListAdapter
 
+        viewModel.fetchData("lol").observe(this, Observer { post ->
+            post?.let { response ->
+                when(response.status){
+                    Status.SUCCESS -> {
+                        postListProgress.gone()
+                        postListAdapter.listPosts = response.data?.posts!!
+                    }
+                    Status.LOADING -> postListProgress.show()
+                    Status.ERROR   -> {
+                        postListProgress.gone()
+                        Snackbar.make(dataBinding.postListRecyclerView,response.errorMessage,Snackbar.LENGTH_SHORT).show()
+                    }
+                }
 
-//        viewModel.networkEvents.observe(this, Observer { networkEvent ->
-//            Log.d("SARASA", networkEvent)
-//        })
-
-//        viewModel.repository.getSection("lol")
-//                .subscribeBy(
-//                        onError = {
-//                            println("PostListFragment.onError : ${it.message}")
-//                        },
-//                        onSuccess = {
-//                            println("PostListFragment.onSuccess : ${it.toString()}")
-//                        }
-//                )
-//        viewModel.repository.fetchSection("lol")
-//                .observe(this, Observer {
-//                    println("PostListFragment.observe : ${it.toString()}")
-//                })
-
-        viewModel.fetchSection.observe(this, Observer { post ->
-            println("PostListFragment.observe:  ${post?.toString()}")
-            post?.let {
-                postListAdapter.listPosts = it.posts
             }
         })
+
     }
 }

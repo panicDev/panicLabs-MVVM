@@ -7,10 +7,13 @@ import android.arch.persistence.room.parser.Section
 import id.panicLabs.core.db.AppDb
 import id.panicLabs.core.retrofit.api.CoreApi
 import id.panicLabs.core.retrofit.responses.SectionResponse
+import id.panicLabs.core.state.StateData
+import id.panicLabs.core.utils.asLiveData
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 /**
  * @author panicLabs
@@ -25,19 +28,21 @@ import io.reactivex.schedulers.Schedulers
  */
 class CoreRepository(private val coreApi: CoreApi, val appDb: AppDb) {
 
-    val networkStatus =  MutableLiveData<String>()
-
-    fun fetchSection(section: String): LiveData<SectionResponse> {
-        return LiveDataReactiveStreams.fromPublisher {
-            coreApi.getSection(section)
-        }
-    }
-
-
-    fun getSection(section: String): Single<SectionResponse> {
+    fun fetchSection(section: String): LiveData<StateData<SectionResponse>> {
         return coreApi.getSection(section)
+                .delay(3,TimeUnit.SECONDS)
+                .timeout(8,TimeUnit.SECONDS)
+                .doOnSubscribe {
+                    StateData.loading<SectionResponse>()
+                }
+                .map {
+                    StateData.success(it)
+                }
+                .onErrorReturn {
+                    StateData.failure(it.message ?: "Unknown Error")
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-
+                .asLiveData()
     }
 }

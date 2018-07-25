@@ -1,6 +1,9 @@
 /**
  * This gradle file contains the basic project configuration that all modules should use
  */
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 apply from: '../config/configExt.gradle'
 
 android {
@@ -78,4 +81,8 @@ android {
 //    androidExtensions {
 //        experimental = true
 //    }
+}
+
+androidExtensions {
+    experimental = true
 }
