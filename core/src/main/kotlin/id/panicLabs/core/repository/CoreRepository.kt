@@ -1,17 +1,12 @@
 package id.panicLabs.core.repository
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.LiveDataReactiveStreams
 import android.arch.lifecycle.MutableLiveData
-import android.arch.persistence.room.parser.Section
 import id.panicLabs.core.db.AppDb
+import id.panicLabs.core.di.annotation.Mockable
 import id.panicLabs.core.retrofit.api.CoreApi
 import id.panicLabs.core.retrofit.responses.SectionResponse
-import id.panicLabs.core.state.StateData
-import id.panicLabs.core.utils.asLiveData
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
@@ -26,23 +21,35 @@ import java.util.concurrent.TimeUnit
  * - I use the retrive prefix for a function that does a server-side call and returns the database
  * Flowable to observe the data.
  */
+@Mockable
 class CoreRepository(private val coreApi: CoreApi, val appDb: AppDb) {
 
-    fun fetchSection(section: String): LiveData<StateData<SectionResponse>> {
-        return coreApi.getSection(section)
-                .delay(3,TimeUnit.SECONDS)
+    private val data = MutableLiveData<SectionResponse>()
+
+    private val error = MutableLiveData<String>()
+
+    private var disposable = Disposables.disposed()
+
+    fun observeSection() = data
+
+    fun observeError() = error
+
+    fun fetchSection(section: String) {
+        coreApi.getSection(section).delay(3,TimeUnit.SECONDS)
                 .timeout(8,TimeUnit.SECONDS)
-                .doOnSubscribe {
-                    StateData.loading<SectionResponse>()
-                }
-                .map {
-                    StateData.success(it)
-                }
-                .onErrorReturn {
-                    StateData.failure(it.message ?: "Unknown Error")
-                }
+//                .doAfterTerminate { disposable.dispose() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .asLiveData()
+                .subscribe(
+                        {
+                            println("CoreRepository.fetchSection Success $it")
+                            data.value = it
+                        },
+                        {
+                            println("CoreRepository.fetchSection Error ${it.message}")
+                            error.value = it.message ?: "Unknown Error"
+                        }
+                )
+
     }
 }

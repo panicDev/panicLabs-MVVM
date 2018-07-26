@@ -65,22 +65,28 @@ class PostListFragment: Fragment() {
 
         postListRecyclerView.adapter = postListAdapter
 
-        viewModel.fetchData("lol").observe(this, Observer { post ->
-            post?.let { response ->
-                when(response.status){
-                    Status.SUCCESS -> {
-                        postListProgress.gone()
-                        postListAdapter.listPosts = response.data?.posts!!
-                    }
-                    Status.LOADING -> postListProgress.show()
-                    Status.ERROR   -> {
-                        postListProgress.gone()
-                        Snackbar.make(dataBinding.postListRecyclerView,response.errorMessage,Snackbar.LENGTH_SHORT).show()
-                    }
-                }
-
+        //Observing Success
+        viewModel.observeSection().observe(this, Observer {
+            postListProgress.gone()
+            with(postListAdapter){
+                listPosts = it?.posts.orEmpty()
             }
         })
 
+        //Observing Error
+        viewModel.observeError().observe(this, Observer {error ->
+            postListProgress.gone()
+            error?.let {
+                Snackbar.make(dataBinding.postListRecyclerView,"Error : $it",Snackbar.LENGTH_SHORT).show()
+            }
+
+        })
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.fetchData("lol")
+    }
+
 }

@@ -16,5 +16,3 @@ repositories {
 dependencies {
     apply from: '../config/configDependencies.gradle'
 }
-
-//apply from: '../config/coveralls.gradle'

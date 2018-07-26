@@ -4,7 +4,7 @@
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-apply from: '../config/configExt.gradle'
+apply plugin: 'kotlin-allopen'
 
 android {
     compileSdkVersion versions.compileSdkVersion
@@ -70,19 +70,28 @@ android {
 
     configurations.all {
         //Some of the libraries that we are using are using a different run gradlew <MODULE>:dependencies to check'em
-        resolutionStrategy.force "com.android.support:appcompat-v7:$libraries.googleSupportVersion"
-        resolutionStrategy.force "com.android.support:support-core-utils:$libraries.googleSupportVersion"
-        resolutionStrategy.force "android.arch.lifecycle:runtime:$libraries.lifecycleVersion"
-        resolutionStrategy.force "android.arch.lifecycle:livedata-core:$libraries.lifecycleVersion"
-        resolutionStrategy.force "android.arch.lifecycle:viewmodel:$libraries.lifecycleVersion"
+        resolutionStrategy.force "com.android.support:appcompat-v7:$versions.suport"
+        resolutionStrategy.force "com.android.support:support-core-utils:$versions.suport"
+        resolutionStrategy.force "android.arch.lifecycle:runtime:$versions.architecture"
+        resolutionStrategy.force "android.arch.lifecycle:livedata-core:$versions.architecture"
+        resolutionStrategy.force "android.arch.lifecycle:viewmodel:$versions.architecture"
     }
+}
 
-
-//    androidExtensions {
-//        experimental = true
-//    }
+allOpen {
+    annotation("id.panicLabs.core.di.annotation.Mockable")
 }
 
 androidExtensions {
     experimental = true
+}
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
+
+kapt {
+    mapDiagnosticLocations = true
 }

@@ -1,0 +1,111 @@
+def Group(Closure closure) {
+    closure.delegate = dependencies
+    return closure
+}
+ext {
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // KOTLIN                                                                                     //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    kotlin = Group {
+        implementation deps.kotlin.lib
+        implementation deps.kotlin.ktx
+        implementation deps.kotlin.coroutines
+        implementation deps.kotlin.anko
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // DAGGER                                                                                      //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    dagger = Group {
+        implementation deps.dagger.dagger
+        kapt deps.dagger.compiler
+        implementation deps.dagger.android
+        implementation deps.dagger.support
+        kapt deps.dagger.processor
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // NETWORKING                                                                                 //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    networking = Group {
+        implementation deps.retrofit.retrofit
+        implementation deps.retrofit.rx
+        implementation deps.retrofit.gson
+
+        implementation deps.okHttp.okHttp
+        implementation deps.okHttp.logging
+
+        implementation deps.moshi
+        implementation deps.kotshi.kotshi
+        kapt deps.kotshi.compiler
+
+        implementation deps.ok2Curl
+        implementation deps.stetho
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // RX                                                                                         //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    rx = Group {
+        implementation deps.rx.android
+        implementation deps.rx.java
+        implementation deps.rx.kotlin
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // ARCHITECTURE COMPONENTS                                                                    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    architectureComponents = Group {
+        implementation deps.ac.viewModel
+        implementation deps.ac.liveData
+        implementation deps.ac.extensions
+        implementation deps.ac.streams
+        implementation deps.ac.paging
+        kapt deps.ac.compiler
+        implementation deps.ac.roomRuntime
+        implementation deps.ac.roomCompiler
+        implementation deps.ac.roomRx
+        implementation deps.ac.roomTesting
+        annotationProcessor deps.ac.roomCompilerApt
+        kapt deps.ac.roomCompilerKapt
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // VIEW                                                                                       //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    view = Group {
+        implementation deps.support.compat
+        implementation deps.support.app
+        implementation deps.support.cardView
+        implementation deps.support.recyclerView
+        implementation deps.support.design
+        implementation deps.constraint.constraint
+        implementation deps.support.multidex
+
+        implementation deps.glide.Glide
+        implementation deps.glide.glideintegration
+        kapt deps.glide.glideKapt
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // TESTING                                                                                     //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    testing = Group {
+        testImplementation(deps.jUnit) { exclude group: 'org.hamcrest' }
+        testImplementation deps.junitPlatformRunner
+        testImplementation deps.spek.spekApi
+        testImplementation deps.spek.spekPlatformEngine
+        testImplementation deps.spek.spekSubjectExtension
+        testImplementation deps.kotlinTest.kotlinTest
+        testImplementation deps.kotlinTest.kotlinReflect
+        testImplementation deps.mockito.kotlin
+        testImplementation deps.ac.testing
+    }
+}

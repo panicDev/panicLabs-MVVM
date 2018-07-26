@@ -1,7 +1,9 @@
 package id.panicLabs.core.utils
 
+import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.LiveDataReactiveStreams
+import android.arch.lifecycle.Observer
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Observable
@@ -17,3 +19,7 @@ fun <T> Maybe<T>.asLiveData(): LiveData<T> = LiveDataReactiveStreams.fromPublish
 fun <T> Single<T>.asLiveData(): LiveData<T> = LiveDataReactiveStreams.fromPublisher(this.toFlowable())
 fun <T> Observable<T>.asLiveData(): LiveData<T> = LiveDataReactiveStreams.fromPublisher(this.toFlowable(io.reactivex.BackpressureStrategy.BUFFER))
 fun <T> Publisher<T>.toLiveData(): LiveData<T> = LiveDataReactiveStreams.fromPublisher(this)
+
+fun <T> LifecycleOwner.observe(liveData: LiveData<T>, action: (t: T) -> Unit) {
+    liveData.observe(this, Observer { it?.let { action(it) } })
+}

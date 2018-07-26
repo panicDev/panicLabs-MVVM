@@ -3,7 +3,12 @@
  */
 
 dependencies {
-    apply from: '../config/configExt.gradle'
-    core()
+    apply from: '../config/configDependenciesGroup.gradle'
+    kotlin()
+    dagger()
+    networking()
+    rx()
+    architectureComponents()
+    view()
     testing()
 }
