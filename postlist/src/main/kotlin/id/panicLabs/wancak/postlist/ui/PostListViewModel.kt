@@ -16,4 +16,7 @@ class PostListViewModel @Inject constructor(var repository: CoreRepository) : Vi
 
     fun observeError() = repository.observeError()
 
+    fun loadMore(section: String,id: String) = repository.loadMore(section, id)
+
+    fun observeLoadMore() = repository.observeFetching()
 }

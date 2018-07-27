@@ -13,4 +13,7 @@ interface CoreApi {
 
     @GET("{section}")
     fun getSection(@Path("section") section: String) : Single<SectionResponse>
+
+    @GET("{section}/{pageId}")
+    fun getMoreSection(@Path("section") section: String,@Path("pageId") pageId: String) : Single<SectionResponse>
 }

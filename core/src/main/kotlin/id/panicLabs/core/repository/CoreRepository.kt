@@ -28,16 +28,36 @@ class CoreRepository(private val coreApi: CoreApi, val appDb: AppDb) {
 
     private val error = MutableLiveData<String>()
 
-    private var disposable = Disposables.disposed()
+    var loading = MutableLiveData<Boolean>()
+    var fetching = MutableLiveData<SectionResponse>()
+
 
     fun observeSection() = data
 
     fun observeError() = error
 
+    fun observeFetching() = fetching
+
+    fun loadMore(section: String, id: String){
+        coreApi.getMoreSection(section,id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError { error.value = it.message ?: "Unknown Error" }
+                .subscribe(
+                        {
+                            println("CoreRepository.loadMore Success $it")
+                            fetching.value = it
+                        },
+                        {
+                            println("CoreRepository.loadMore Success $it")
+                            error.value = it.message ?: "Unknown Error"
+                        }
+                )
+    }
+
     fun fetchSection(section: String) {
         coreApi.getSection(section).delay(3,TimeUnit.SECONDS)
                 .timeout(8,TimeUnit.SECONDS)
-//                .doAfterTerminate { disposable.dispose() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

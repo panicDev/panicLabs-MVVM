@@ -9,19 +9,16 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import id.panicLabs.core.di.module.MyViewModelFactory
-import id.panicLabs.core.state.Status
-import javax.inject.Inject
-import id.panicLabs.wancak.postlist.di.DaggerPostListComponent
 import id.panicLabs.core.CoreApp
-import id.panicLabs.core.ui.PRecyclerView
+import id.panicLabs.core.adapter.LoadingAdapter
+import id.panicLabs.core.di.module.MyViewModelFactory
 import id.panicLabs.core.utils.gone
-import id.panicLabs.core.utils.show
-import id.panicLabs.wancak.postlist.databinding.FragmentPostListBinding
 import id.panicLabs.wancak.postlist.R
+import id.panicLabs.wancak.postlist.databinding.FragmentPostListBinding
+import id.panicLabs.wancak.postlist.di.DaggerPostListComponent
 import kotlinx.android.synthetic.main.fragment_post_list.*
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 /**
  * @author panicLabs
@@ -51,27 +48,53 @@ class PostListFragment: Fragment() {
         return inflater.inflate(R.layout.fragment_post_list, container, false)
     }
 
+    private lateinit var loadingAdapter: LoadingAdapter
+
+    private var pageId: String = ""
+    private var page: Int = 1
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dataBinding = FragmentPostListBinding.bind(view)
         viewModel = ViewModelProviders.of(this, viewModelProvider).get(PostListViewModel::class.java)
         dataBinding.viewModel = viewModel
 
-        val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        val staggeredGridLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         staggeredGridLayoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
         postListRecyclerView.layoutManager = staggeredGridLayoutManager
         staggeredGridLayoutManager.isItemPrefetchEnabled = true
-        postListAdapter = PostListAdapter()
+        postListAdapter = PostListAdapter(requireContext(),viewModel)
+        loadingAdapter = LoadingAdapter(postListAdapter, 5)
 
-        postListRecyclerView.adapter = postListAdapter
+        postListRecyclerView.adapter = loadingAdapter
 
         //Observing Success
         viewModel.observeSection().observe(this, Observer {
+            pageId = it?.page?.next.orEmpty()
+            requireContext().toast("pageId $pageId")
             postListProgress.gone()
             with(postListAdapter){
-                listPosts = it?.posts.orEmpty()
+                setData(it?.posts)
+            }
+
+
+            if (pageId.isNotEmpty()){
+                if (page <= 4){
+                    viewModel.loadMore("lol", pageId)
+                    page.inc()
+                }
+
             }
         })
+
+        loadingAdapter.setLoadMoreListener {
+            requireContext().toast("setLoadMoreListener $pageId")
+            if (pageId.isNotEmpty()){
+                viewModel.loadMore("lol", pageId)
+            }
+
+        }
+
 
         //Observing Error
         viewModel.observeError().observe(this, Observer {error ->
@@ -80,6 +103,13 @@ class PostListFragment: Fragment() {
                 Snackbar.make(dataBinding.postListRecyclerView,"Error : $it",Snackbar.LENGTH_SHORT).show()
             }
 
+        })
+
+        viewModel.observeLoadMore().observe(this, Observer {
+            println("PostListFragment.observeLoadMore $it")
+            with(postListAdapter){
+                setData(it?.posts)
+            }
         })
     }
 
