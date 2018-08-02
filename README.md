@@ -3,6 +3,7 @@
 <p align="center">
   <a href="https://circleci.com/gh/panicDev/panicLabs-MVVM/tree/master"><img src="https://circleci.com/gh/panicDev/panicLabs-MVVM/tree/master.svg?style=svg" alt="Build Status"></a>
   <a href="https://coveralls.io/github/panicDev/panicLabs-MVVM"><img src="https://coveralls.io/repos/github/panicDev/panicLabs-MVVM/badge.svg" alt="Coverage"></a>
+  <a href="https://codebeat.co/projects/github-com-panicdev-paniclabs-mvvm-master"><img alt="codebeat badge" src="https://codebeat.co/badges/c8d8da36-6ee5-4d9e-968c-9598c268ab44" /></a>
 </p>
 
 
