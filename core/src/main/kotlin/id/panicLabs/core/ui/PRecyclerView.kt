@@ -23,15 +23,15 @@ class PRecyclerView : RecyclerView {
         fun onLoadmore()
     }
 
-    constructor(context: Context?) : super(context) {
+    constructor(context: Context?) : super(context!!) {
         setLoadmoreListener()
     }
 
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+    constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs) {
         setLoadmoreListener()
     }
 
-    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
+    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context!!, attrs, defStyle) {
         setLoadmoreListener()
     }
 
@@ -55,19 +55,18 @@ class PRecyclerView : RecyclerView {
 
     fun setLoadmoreListener() {
         this.addOnScrollListener(object : OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
             }
 
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (!canScrollVertically(1)) {
                     if (!loadingFinish) {
                         onLoadMoreListener?.onLoadmore()
                         loadingFinish = true
                     }
                 }
-
                 super.onScrolled(recyclerView, dx, dy)
             }
         })
